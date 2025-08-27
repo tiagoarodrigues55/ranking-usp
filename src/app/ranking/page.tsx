@@ -56,11 +56,28 @@ export default function RankingPage() {
         setRankedPlayers([]);
       } else {
         // Mapeia os dados para a interface RankedPlayer
-        const players = data.map((item: any) => ({
-          id: item.players.id,
-          name: item.players.name,
-          rating: item.rating,
-        }));
+        interface RatingWithPlayer {
+          rating: number;
+          players: {
+            id: number;
+            name: string;
+          }[] | null;
+        }
+
+        const players = data
+          .map((item: RatingWithPlayer) => {
+            if (!item.players || item.players.length === 0) {
+              return null;
+            }
+            const playerInfo = item.players[0];
+            return {
+              id: playerInfo.id,
+              name: playerInfo.name,
+              rating: item.rating,
+            };
+          })
+          .filter((player): player is RankedPlayer => player !== null);
+
         setRankedPlayers(players);
       }
       setIsLoading(false);
