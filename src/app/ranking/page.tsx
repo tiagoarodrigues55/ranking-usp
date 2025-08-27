@@ -7,9 +7,18 @@ import type { Question } from '../../types';
 
 // Interface para o jogador com seu rating específico para uma pergunta
 interface RankedPlayer {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
+    rating: number;
+}
+
+// Interface para os dados retornados pelo Supabase
+interface RatingWithPlayer {
   rating: number;
+  players: {
+    id: number;
+    name: string;
+  };
 }
 
 export default function RankingPage() {
@@ -48,37 +57,31 @@ export default function RankingPage() {
         .from('ratings')
         .select('rating, players(id, name)') // Faz o join com a tabela players
         .eq('question_id', selectedQuestionId)
-        .order('rating', { ascending: false });
+        .order('rating', { ascending: false }) as { data: RatingWithPlayer[] | null, error: Error | null };
 
       if (error) {
         setError('Erro ao buscar o ranking.');
         console.error(error);
         setRankedPlayers([]);
-      } else {
+      } else if (data) {
         // Mapeia os dados para a interface RankedPlayer
-        interface RatingWithPlayer {
-          rating: number;
-          players: {
-            id: number;
-            name: string;
-          }[] | null;
-        }
-
         const players = data
-          .map((item: RatingWithPlayer) => {
-            if (!item.players || item.players.length === 0) {
+          .map((item) => {
+            if (!item.players) {
               return null;
             }
-            const playerInfo = item.players[0];
+            const playerInfo = item.players;
             return {
               id: playerInfo.id,
               name: playerInfo.name,
               rating: item.rating,
             };
           })
-          .filter((player): player is RankedPlayer => player !== null);
+          .filter((player) => player !== null) as RankedPlayer[];
 
         setRankedPlayers(players);
+      } else {
+        setRankedPlayers([]);
       }
       setIsLoading(false);
     };
