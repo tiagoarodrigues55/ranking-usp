@@ -32,19 +32,19 @@ export default function AddQuestionPage() {
   };
 
   return (
-    <main className="flex flex-col items-center min-h-screen bg-gray-900 text-white p-4 md:p-8">
-      <div className="w-full max-w-xl">
-        <div className="flex justify-start mb-8">
-          <Link href="/" className="px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700 transition-colors">
+    <main className="add-question-page-container">
+      <div className="add-question-content-wrapper">
+        <div className="back-link-container">
+          <Link href="/" className="button bg-blue-500 text-white hover:bg-blue-600">
             &larr; Voltar para a votação
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold mb-8 text-center">Adicionar Nova Pergunta</h1>
+        <h1 className="add-question-heading">Adicionar Nova Pergunta</h1>
 
-        <form onSubmit={handleSubmit} className="w-full bg-gray-800 rounded-lg shadow-lg p-8">
+        <form onSubmit={handleSubmit} className="add-question-form">
           <div className="mb-6">
-            <label htmlFor="question" className="block text-lg font-medium text-gray-300 mb-2">
+            <label htmlFor="question" className="form-label">
               Texto da Pergunta
             </label>
             <input
@@ -52,7 +52,7 @@ export default function AddQuestionPage() {
               type="text"
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
-              className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-input"
               placeholder='Ex: Quem é mais calvo?'
               disabled={isLoading}
             />
@@ -60,7 +60,7 @@ export default function AddQuestionPage() {
 
           <button
             type="submit"
-            className="w-full px-4 py-3 bg-green-600 rounded-md hover:bg-green-700 transition-colors font-semibold disabled:bg-gray-500 disabled:cursor-not-allowed"
+            className={`button bg-green-500 text-white hover:bg-green-700 ${isLoading ? 'disabled' : ''}`}
             disabled={isLoading}
           >
             {isLoading ? 'Adicionando...' : 'Adicionar Pergunta'}
@@ -68,10 +68,8 @@ export default function AddQuestionPage() {
         </form>
 
         {feedback && (
-          <div 
-            className={`mt-6 p-4 rounded-md text-center font-medium ${
-              feedback.type === 'success' ? 'bg-green-200 text-green-900' : 'bg-red-200 text-red-900'
-            }`}
+          <div
+            className={`feedback-message ${feedback.type}`}
           >
             {feedback.message}
           </div>

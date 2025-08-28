@@ -33,3 +33,4 @@ ranking-app/
 - O arquivo `.env.local` não será commitado no git (está no .gitignore)
 - A URL do Supabase já está configurada no código
 - Você só precisa configurar a chave anônima
+

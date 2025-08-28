@@ -68,29 +68,29 @@ export default function VoteClientComponent({ initialRoundData }: VoteClientComp
     getNewRound();
   };
 
-  const PlayerCard = ({ player, onVote }: { 
-    player: Player, 
+  const PlayerCard = ({ player, onVote }: {
+    player: Player,
     onVote: () => void,
   }) => {
     const [imageError, setImageError] = useState(false);
     const cardHeight = isMobile ? screenHeight / 3 : 600;
     const cardWidth = isMobile ? cardHeight * (400 / 600) : 400;
     const imageSize = Math.min(cardWidth * 0.9, cardHeight * 0.85);
-    const fontSize = cardWidth < 300 ? 'text-lg' : 'text-2xl';
-    const iconSize = cardWidth < 300 ? 'text-6xl' : 'text-8xl';
+    const fontSize = cardWidth < 300 ? 'text-base' : 'text-2xl'; // Keep for now, will be replaced by custom CSS
+    const iconSize = cardWidth < 300 ? 'text-6xl' : 'text-8xl'; // Keep for now, will be replaced by custom CSS
 
     return (
       <div
-        className="relative flex flex-col items-center justify-center rounded-lg cursor-pointer bg-white border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-all"
-        style={{ 
-          width: `${cardWidth}px`, 
+        className="player-card"
+        style={{
+          width: `${cardWidth}px`,
           height: `${cardHeight}px`,
           padding: `${cardHeight * 0.04}px`
         }}
         onClick={onVote}
       >
-        <div 
-          className="rounded-lg overflow-hidden bg-gray-200 mb-2"
+        <div
+          className="player-image-container"
           style={{
             width: `${imageSize}px`,
             height: `${imageSize}px`,
@@ -98,33 +98,33 @@ export default function VoteClientComponent({ initialRoundData }: VoteClientComp
           }}
         >
           {!imageError ? (
-            <Image 
+            <Image
               src={player.image_url}
-              alt={player.name} 
+              alt={player.name}
               width={imageSize}
               height={imageSize}
-              unoptimized 
-              className="w-full h-full object-cover"
+              unoptimized
+              className="player-image"
               onError={() => setImageError(true)}
             />
           ) : (
-            <div className={`w-full h-full flex items-center justify-center text-gray-400 ${iconSize}`}>
+            <div className={`player-icon-placeholder ${iconSize}`}>
               👤
             </div>
           )}
         </div>
-        
-        <h2 className={`${fontSize} font-semibold text-center px-2`} style={{ marginBottom: `${cardHeight * 0.03}px` }}>
+
+        <h2 className={`player-name ${fontSize}`} style={{ marginBottom: `${cardHeight * 0.03}px` }}>
           {player.name}
         </h2>
-        
-        <div 
-          className="bg-blue-100 rounded-full"
+
+        <div
+          className="player-rating-badge"
           style={{
             padding: `${cardHeight * 0.01}px ${cardWidth * 0.04}px`
           }}
         >
-          <span className={`${cardWidth < 300 ? 'text-sm' : 'text-lg'} font-medium text-blue-800`}>
+          <span className={`player-rating-text ${cardWidth < 300 ? 'text-sm' : 'text-lg'}`}>
             ⭐ {Math.round(player.rating)}
           </span>
         </div>
@@ -136,48 +136,54 @@ export default function VoteClientComponent({ initialRoundData }: VoteClientComp
 
   return (
     <div>
-      <header className="p-4 flex justify-between items-center">
-        <Link 
-          href="/ranking" 
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-center"
+      <header className="main-header">
+        <Link
+          href="/ranking"
+          className="button bg-blue-500 text-white hover:bg-blue-600"
         >
           Ranking
         </Link>
-        <Link 
-          href="/add-question" 
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-center"
+        <Link
+          href="/add-question"
+          className="button bg-green-500 text-white hover:bg-green-600"
         >
           Adicionar Pergunta
         </Link>
+        <Link
+          href="/edit-player"
+          className="button bg-purple-500 text-white hover:bg-purple-600"
+        >
+          Editar Jogadores
+        </Link>
       </header>
 
-      <div className="flex flex-col items-center">
-        <h1 className="text-2xl md:text-4xl font-bold text-center mb-8 text-gray-800 px-4">
+      <div className="main-content">
+        <h1 className="question-text">
           {question.text}
         </h1>
-        
-        <div className={`flex items-center justify-center ${isMobile ? 'flex-col gap-6' : 'flex-row gap-8'}`}>
+
+        <div className={`player-cards-container ${isMobile ? 'flex-col gap-6' : 'flex-row gap-8'}`}>
           {isLoading ? (
-            <div 
-              className="flex flex-col items-center justify-center"
+            <div
+              className="loading-container"
               style={{ height: isMobile ? (screenHeight / 3) * 2 + 24 : 600 }}
             >
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
+              <div className="loading-spinner">
+                <div className="loading-dot" style={{ animationDelay: '-0.3s' }}></div>
+                <div className="loading-dot" style={{ animationDelay: '-0.15s' }}></div>
+                <div className="loading-dot"></div>
               </div>
-              <p className="mt-4 text-lg text-gray-600">Carregando nova rodada...</p>
+              <p className="loading-text">Carregando nova rodada...</p>
             </div>
           ) : (
             <>
-              <PlayerCard 
-                player={player1} 
+              <PlayerCard
+                player={player1}
                 onVote={() => handleVote(player1, player2)}
               />
-              
-              <PlayerCard 
-                player={player2} 
+
+              <PlayerCard
+                player={player2}
                 onVote={() => handleVote(player2, player1)}
               />
             </>

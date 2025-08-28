@@ -29,10 +29,10 @@ export default async function HomePage() {
 
   if (!initialRoundData) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4 text-center">
-        <h1 className="text-2xl font-bold">Erro ao carregar a rodada de votação.</h1>
+      <main className="error-page-container">
+        <h1 className="error-heading">Erro ao carregar a rodada de votação.</h1>
         <p>Não foi possível conectar ao banco de dados ou não há perguntas/jogadores suficientes.</p>
-        <p className="mt-2 text-sm text-gray-400">Verifique as configurações do Supabase e se as tabelas `questions` e `players` estão populadas.</p>
+        <p className="error-text">Verifique as configurações do Supabase e se as tabelas `questions` e `players` estão populadas.</p>
       </main>
     );
   }

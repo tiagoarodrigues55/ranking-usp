@@ -90,21 +90,21 @@ export default function RankingPage() {
   }, [selectedQuestionId]);
 
   return (
-    <main className="flex flex-col items-center min-h-screen bg-gray-900 text-white p-4 md:p-8">
-      <h1 className="text-4xl font-bold mb-8">Ranking</h1>
-      <Link href="/" className="mt-8 px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700 transition-colors">
+    <main className="ranking-page-container">
+      <h1 className="ranking-heading">Ranking</h1>
+      <Link href="/" className="button bg-blue-500 text-white hover:bg-blue-600">
         Voltar para a votação
       </Link>
       {/* Seletor de Perguntas */}
-      <div className="w-full max-w-2xl mb-6">
-        <label htmlFor="question-select" className="block text-lg font-medium text-gray-300 mb-2">
+      <div className="question-selector-container">
+        <label htmlFor="question-select" className="form-label">
           Selecione a pergunta para ver o ranking:
         </label>
         <select
           id="question-select"
           value={selectedQuestionId || ''}
           onChange={(e) => setSelectedQuestionId(Number(e.target.value))}
-          className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="form-select"
           disabled={questions.length === 0}
         >
           {questions.map((q) => (
@@ -116,34 +116,32 @@ export default function RankingPage() {
       </div>
 
       {/* Tabela de Ranking */}
-      <div className="w-full max-w-2xl bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+      <div className="ranking-table-container">
         {isLoading ? (
-          <div className="p-8 text-center">Carregando ranking...</div>
+          <div className="ranking-loading-message">Carregando ranking...</div>
         ) : error ? (
-          <div className="p-8 text-center text-red-400">{error}</div>
+          <div className="ranking-error-message">{error}</div>
         ) : (
-          <table className="w-full text-left">
-            <thead className="border-b border-gray-600">
+          <table className="ranking-table">
+            <thead className="ranking-table-head">
               <tr>
-                <th className="p-4">Posição</th>
-                <th className="p-4">Nome</th>
-                <th className="p-4 text-right">Rating</th>
+                <th className="ranking-table-header">Posição</th>
+                <th className="ranking-table-header">Nome</th>
+                <th className="ranking-table-header ranking-table-data rating">Rating</th>
               </tr>
             </thead>
             <tbody>
               {rankedPlayers.map((player, index) => (
-                <tr key={player.id} className="border-b border-gray-700 last:border-b-0">
-                  <td className="p-4 font-bold">{index + 1}</td>
-                  <td className="p-4">{player.name}</td>
-                  <td className="p-4 text-right font-mono">{player.rating.toFixed(0)}</td>
+                <tr key={player.id} className="ranking-table-row">
+                  <td className="ranking-table-data position">{index + 1}</td>
+                  <td className="ranking-table-data">{player.name}</td>
+                  <td className="ranking-table-data rating">{player.rating.toFixed(0)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
       </div>
-
-
     </main>
   );
 }
